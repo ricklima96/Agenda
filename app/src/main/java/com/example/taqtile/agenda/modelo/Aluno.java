@@ -8,15 +8,6 @@ public class Aluno {
     private Double nota;
     private long id;
 
-
-
-
-
-
-
-
-
-
     public String getNome() {
         return nome;
     }
@@ -63,5 +54,10 @@ public class Aluno {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return getId() + " - " + getNome();
     }
 }
