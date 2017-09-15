@@ -1,5 +1,6 @@
 package com.example.taqtile.agenda;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -15,6 +16,12 @@ public class ListaAlunosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_alunos);
 
+        //cria conexão com banco de dados
+        //faz uma busca no banco para trazer alunos
+        //popularia array de string
+        //fecha conexão
+
+
 
         String[] alunos = {"Ricardo", "Fernando", "Luninha", "Ricardo", "Fernando", "Luninha", "Ricardo", "Fernando", "Luninha", "Ricardo", "Fernando", "Luninha"};
         ListView listaAlunos = (ListView) findViewById(R.id.lista_alunos);
@@ -25,7 +32,8 @@ public class ListaAlunosActivity extends AppCompatActivity {
         novoAluno.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                Intent vaiProFormulario = new Intent(ListaAlunosActivity.this, FormularioActivity.class);
+                startActivity(vaiProFormulario);
             }
         });
     }
