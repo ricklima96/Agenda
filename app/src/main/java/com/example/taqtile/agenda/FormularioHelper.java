@@ -38,7 +38,5 @@ public class FormularioHelper {
         campoSite.setText(aluno.getSite());
         campoNota.setProgress(aluno.getNota().intValue());
         this.aluno = aluno;
-
-
     }
 }

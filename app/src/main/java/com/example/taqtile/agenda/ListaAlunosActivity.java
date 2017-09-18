@@ -20,25 +20,23 @@ import java.util.List;
 public class ListaAlunosActivity extends AppCompatActivity {
 
     private ListView listaAlunos;
+    public static final String ALUNO_KEY = "aluno";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_alunos);
 
-        
         listaAlunos = (ListView) findViewById(R.id.lista_alunos);
-        //Pressionar algum item da lista para ir ao formulário e realizar edicoes
         listaAlunos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View item, int position, long id) {
                 Aluno aluno = (Aluno) listaAlunos.getItemAtPosition(position);
                 Intent vaiProFormulario = new Intent(ListaAlunosActivity.this, FormularioActivity.class);
-                vaiProFormulario.putExtra("aluno", aluno);
+                vaiProFormulario.putExtra(ALUNO_KEY, aluno);
                 startActivity(vaiProFormulario);
             }
         });
-
         Button novoAluno = (Button) findViewById(R.id.novo_aluno);
         novoAluno.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,17 +45,10 @@ public class ListaAlunosActivity extends AppCompatActivity {
                 startActivity(vaiProFormulario);
             }
         });
-
-        //Registra o menu de contexto para a lista (menu de opcoes para cada item)
         registerForContextMenu(listaAlunos);
     }
 
-
     private void carregaLista() {
-        //cria conexão com banco de dados
-        //faz uma busca no banco para trazer alunos
-        //popularia array de string
-        //fecha conexão
         AlunoDAO dao = new AlunoDAO(this);
         List<Aluno> alunos = dao.buscaAlunos();
         dao.close();
@@ -75,26 +66,28 @@ public class ListaAlunosActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return super.onCreateOptionsMenu(menu);
-
     }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, final ContextMenu.ContextMenuInfo menuInfo)  {
-        MenuItem deletar = menu.add("Deletar");
+        final MenuItem deletar = menu.add(getString(R.string.deletar));
         deletar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-                Aluno aluno = (Aluno) listaAlunos.getItemAtPosition(info.position);
-
-                AlunoDAO dao = new AlunoDAO(ListaAlunosActivity.this);
-                dao.deleta(aluno);
-                dao.close();
-
+                operacaoMenuContexto((AdapterView.AdapterContextMenuInfo) menuInfo, deletar);
                 carregaLista();
                 return false;
             }
         });
     }
 
+    private void operacaoMenuContexto(AdapterView.AdapterContextMenuInfo menuInfo, MenuItem menuItem) {
+        AdapterView.AdapterContextMenuInfo info = menuInfo;
+        Aluno aluno = (Aluno) listaAlunos.getItemAtPosition(info.position);
+        AlunoDAO dao = new AlunoDAO(ListaAlunosActivity.this);
+        if(menuItem.getTitle().equals(getString(R.string.deletar))){
+            dao.deleta(aluno);
+        }
+        dao.close();
+    }
 }
