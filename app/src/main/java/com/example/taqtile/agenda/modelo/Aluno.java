@@ -1,12 +1,14 @@
 package com.example.taqtile.agenda.modelo;
 
+import java.io.Serializable;
+
 /**
  * Created by taqtile on 15/09/17.
  */
-public class Aluno {
+public class Aluno implements Serializable{
     private String nome, endereco, telefone, site;
     private Double nota;
-    private long id;
+    private Long id;
 
     public String getNome() {
         return nome;
@@ -48,11 +50,11 @@ public class Aluno {
         this.nota = nota;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
