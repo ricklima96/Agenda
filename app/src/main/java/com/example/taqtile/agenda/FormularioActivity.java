@@ -1,5 +1,6 @@
 package com.example.taqtile.agenda;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -21,6 +22,14 @@ public class FormularioActivity extends AppCompatActivity {
 
         helper = new FormularioHelper(this);
 
+        Intent intent = getIntent();
+        Aluno aluno = (Aluno) intent.getSerializableExtra("aluno");
+        if (aluno != null) {
+            helper.preencheForumulario(aluno);
+
+
+        }
+
     }
 
     @Override
@@ -32,22 +41,24 @@ public class FormularioActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        //Caso o item do menu de salvar o aluno seja pressionado, cria um aluno, um dao, e insere no banco.
-        switch (item.getItemId()) {
-            case R.id.menu_formulario_ok:
-                Aluno aluno = helper.pegaAluno();
-                AlunoDAO alunoDAO = new AlunoDAO(this);
-                alunoDAO.insere(aluno);
-                alunoDAO.close();
-                Toast.makeText(FormularioActivity.this, "Aluno " + aluno.getNome() + " salvo!", Toast.LENGTH_SHORT).show();
-                //Mata a activity atual e volta para a lista
-                finish();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
+    public boolean onOptionsItemSelected(MenuItem item) {   switch (item.getItemId()) {
+        case R.id.menu_formulario_ok:
+            Aluno aluno = helper.pegaAluno();
 
+            AlunoDAO dao = new AlunoDAO(this);
+            if (aluno.getId() != null)  {
+                dao.altera(aluno);
+            } else {
+                dao.insere(aluno);
+            }
+            dao.close();
+            Toast.makeText(FormularioActivity.this, "Aluno " + aluno.getNome() + " salvo!", Toast.LENGTH_SHORT).show();
+
+            finish();
+            break;
     }
 
+        return super.onOptionsItemSelected(item);
+    }
 
 }
